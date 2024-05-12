@@ -13,8 +13,7 @@ import os.path
 st.set_page_config(
     page_title="CIPHERCHEF",
     page_icon="🔒",
-    layout="centered",
-    sharing='off'
+    layout="centered"
 )
 
 hide_menu_style = """
@@ -34,6 +33,14 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown(
+    """
+    <style>
+    .viewerBadge_container__1QSob {display: none !important;}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 #Options Menu
 with st.sidebar:
