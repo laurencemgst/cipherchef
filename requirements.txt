@@ -3,3 +3,5 @@ numpy
 pandas
 pydeck
 streamlit
+cryptography==36.0.0
+pycryptodome==3.12.0
