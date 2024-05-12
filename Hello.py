@@ -13,7 +13,8 @@ import os.path
 st.set_page_config(
     page_title="CIPHERCHEF",
     page_icon="🔒",
-    layout="centered"
+    layout="centered",
+    sharing='off'
 )
 
 hide_menu_style = """
