@@ -20,6 +20,7 @@ hide_menu_style = """
     <style>
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+    .viewerBadge {display: none !important;}
     </style>
 """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
@@ -54,7 +55,7 @@ with st.sidebar:
         </style>
         <center>
         <div class="rounded-image">
-            <img src="https://github.com/laurencemgst/cipherchef/blob/main/chipherchef.png?raw=true" alt="Image" width="250">
+            <img src="https://raw.githubusercontent.com/laurencemgst/public_files/main/chipherchef.png" alt="Image" width="250">
         </div>
         <h4 class="custom-h4"> Developed by: </h4>
         <p> Laurence O. Magistrado <br> Andrea Krystel Estadilla <br> John Louie Abenir </p>
