@@ -20,7 +20,6 @@ hide_menu_style = """
     <style>
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    .viewerBadge {display: none !important;}
     </style>
 """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
@@ -34,14 +33,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown(
-    """
-    <style>
-    .viewerBadge_container__1QSob {display: none !important;}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 #Options Menu
 with st.sidebar:
@@ -63,7 +54,7 @@ with st.sidebar:
         </style>
         <center>
         <div class="rounded-image">
-            <img src="https://raw.githubusercontent.com/laurencemgst/public_files/main/chipherchef.png" alt="Image" width="250">
+            <img src="https://github.com/laurencemgst/cipherchef/blob/main/chipherchef.png?raw=true" alt="Image" width="250">
         </div>
         <h4 class="custom-h4"> Developed by: </h4>
         <p> Laurence O. Magistrado <br> Andrea Krystel Estadilla <br> John Louie Abenir </p>
@@ -71,7 +62,7 @@ with st.sidebar:
         """,
         unsafe_allow_html=True
     )
-    selected = st.selectbox("Select Cryptography Tools", ["Home", "XOR Cipher", "Ceasar Cipher", "Text Hashing", "File EncryptDecrypt", "RSA"])
+    selected = st.selectbox("Select Cryptography Tools", ["Home", "XOR Cipher", "Ceasar Cipher", "Text Hashing","XOR Block Cipher", "File EncryptDecrypt", "RSA"])
 
 #Home Page
 if selected=="Home":
@@ -211,20 +202,21 @@ if selected=="XOR Cipher":
         """, 
         unsafe_allow_html=True
     )
-    plaintext = bytes(st.text_area("Plaintext: ").encode())
-    key = bytes(st.text_area("Key: ").encode())
+    with st.container(border=True):
+        plaintext = bytes(st.text_area("Plaintext: ").encode())
+        key = bytes(st.text_area("Key: ").encode())
 
-    if st.button("Encrypt"):
-        if plaintext == key:
-            st.write("<div class='container message'>Plaintext should not be equal to the key</div>", unsafe_allow_html=True)
-        elif len(plaintext.decode()) < len(key.decode()):
-            st.write("<div class='container message'>Plaintext length should be equal or greater than the length of key</div>", unsafe_allow_html=True)
-        else:
-            encrypted = xor_encrypt(plaintext, key)
-            if encrypted:  # Check if encryption was successful (non-empty ciphertext)
-                st.write("Ciphertext: ", encrypted.decode())
-                decrypted = xor_decrypt(encrypted, key)
-                st.write("Decrypted: ", decrypted.decode())
+        if st.button("Encrypt"):
+            if plaintext == key:
+                st.write("<div class='container message'>Plaintext should not be equal to the key</div>", unsafe_allow_html=True)
+            elif len(plaintext.decode()) < len(key.decode()):
+                st.write("<div class='container message'>Plaintext length should be equal or greater than the length of key</div>", unsafe_allow_html=True)
+            else:
+                encrypted = xor_encrypt(plaintext, key)
+                if encrypted:  # Check if encryption was successful (non-empty ciphertext)
+                    st.write("Ciphertext: ", encrypted.decode())
+                    decrypted = xor_decrypt(encrypted, key)
+                    st.write("Decrypted: ", decrypted.decode())
 
     
 #Ceasar Cipher Page
@@ -283,20 +275,21 @@ if selected=="Ceasar Cipher":
             """, 
             unsafe_allow_html=True
         )
-        text = st.text_area("Enter text to Encrypt", key=143)
-        shift_keys_input = st.text_area("Enter shift keys separated by space")
+        with st.container(border=True):
+            text = st.text_area("Enter text to Encrypt", key=143)
+            shift_keys_input = st.text_area("Enter shift keys separated by space")
 
-        shift_keys = [int(key) for key in shift_keys_input.split() if key.strip()]
+            shift_keys = [int(key) for key in shift_keys_input.split() if key.strip()]
 
-        if st.button("Encrypt"):
-            encrypted = encrypt_decrypt(text, shift_keys, False)
-            decrypted = encrypt_decrypt(encrypted, shift_keys, True)
+            if st.button("Encrypt"):
+                encrypted = encrypt_decrypt(text, shift_keys, False)
+                decrypted = encrypt_decrypt(encrypted, shift_keys, True)
 
-            st.write("----------")
-            st.write("Text:", text)
-            st.write("Shift keys:" , " ".join(map(str, shift_keys)))
-            st.write("Result:", encrypted)
-            st.write("Decrypted text:", decrypted)
+                st.write("----------")
+                st.write("Text:", text)
+                st.write("Shift keys:" , " ".join(map(str, shift_keys)))
+                st.write("Result:", encrypted)
+                st.write("Decrypted text:", decrypted)
 
 #Text Hashing Page
 if selected=='Text Hashing':
@@ -346,15 +339,127 @@ if selected=='Text Hashing':
         unsafe_allow_html=True
     )
 
-    text_input = st.text_area("Enter the text to hash:")
-    selected_algorithm = st.selectbox("Select Hashing Algorithm:", hash_algorithms)
+    with st.container(border=True):
 
-    if st.button("Hash"):
-        if text_input:
-            hashed_text = hash_text(text_input, selected_algorithm)
-            st.success(f"{selected_algorithm.upper()} Hash: {hashed_text}")
-        else:
-            st.warning("Please enter some text to hash.")
+        text_input = st.text_area("Enter the text to hash:")
+        selected_algorithm = st.selectbox("Select Hashing Algorithm:", hash_algorithms)
+
+        if st.button("Hash"):
+            if text_input:
+                hashed_text = hash_text(text_input, selected_algorithm)
+                st.success(f"{selected_algorithm.upper()} Hash: {hashed_text}")
+            else:
+                st.warning("Please enter some text to hash.")
+
+# XOR Block Cipher page
+if selected=='XOR Block Cipher':
+    css = """
+    /* Your custom CSS styles */
+    .stButton {
+        padding-left: 38%;
+        padding-right: 33%;
+    }
+    .stButton>button {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .stButton>button:hover {
+        background-color: #45a049; /* Darker Green */
+        color: black;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1), 0 12px 40px rgba(0, 0, 0, 0.1);
+    }
+    """
+
+    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+
+    def pad(data, block_size):    
+        padding_length = block_size - len(data) % block_size  
+        padding = bytes([padding_length] * padding_length)  
+        return data + padding
+
+    def unpad(data):
+        padding_length = data[-1]
+        return data[:-padding_length]
+
+    def xor_encrypt_block(plaintext_block, key):
+        encrypted_block = b''
+        for i in range(len(plaintext_block)):
+            encrypted_block += bytes([plaintext_block[i] ^ key[i % len(key)]])
+        return encrypted_block
+
+    def xor_decrypt_block(ciphertext_block, key):
+        return xor_encrypt_block(ciphertext_block, key)
+
+    def xor_encrypt(plaintext, key, block_size):
+        encrypted_data = b''
+        padded_plaintext = pad(plaintext, block_size)
+        for x, i in enumerate(range(0, len(padded_plaintext), block_size)):
+            plaintext_block = padded_plaintext[i:i+block_size]
+            encrypted_block = xor_encrypt_block(plaintext_block, key)
+            encrypted_data += encrypted_block
+        return encrypted_data
+
+    def xor_decrypt(ciphertext, key, block_size):
+        decrypted_data = b''
+        for x, i in enumerate(range(0, len(ciphertext), block_size)):
+            ciphertext_block = ciphertext[i:i+block_size]
+            decrypted_block = xor_decrypt_block(ciphertext_block, key)
+            decrypted_data += decrypted_block
+        unpadded_decrypted_data = unpad(decrypted_data)
+        return unpadded_decrypted_data
+
+    def main():
+        st.markdown(
+            """
+            <h3 style='text-align: center; color: #4CAF50;'>XOR Encryption and Decryption</h3>
+            <p style='text-align: center; color: #4CAF50;'> Using Block Cipher </p>
+            """, 
+            unsafe_allow_html=True
+        )
+
+        with st.container(border=True):
+            action = st.selectbox("Select Action", ["Encrypt", "Decrypt"])
+
+        with st.container(border=True):
+            if action == "Encrypt":
+                plaintext = st.text_input("Enter the plaintext:")
+                key = st.text_input("Enter the key:")
+                block_size = st.selectbox("Select block size:", [8, 16, 32, 64, 128])
+
+                if st.button("Encrypt"):
+                    plaintext_bytes = bytes(plaintext.encode())
+                    key_bytes = bytes(key.encode())
+                    key_padded = pad(key_bytes, block_size)
+                    encrypted_data = xor_encrypt(plaintext_bytes, key_padded, block_size)
+                    st.success(f"Encrypted data: {encrypted_data.hex()}")
+
+            if action == "Decrypt":
+                ciphertext = st.text_input("Enter the ciphertext (in hexadecimal):")
+                key = st.text_input("Enter the key:")
+                block_size = st.selectbox("Select block size:", [8, 16, 32, 64, 128])
+
+                if st.button("Decrypt"):
+                    ciphertext_bytes = bytes.fromhex(ciphertext)
+                    key_bytes = bytes(key.encode())
+                    key_padded = pad(key_bytes, block_size)
+                    decrypted_data = xor_decrypt(ciphertext_bytes, key_padded, block_size)
+                    st.success(f"Decrypted data: {decrypted_data.decode()}")
+
+    if __name__ == "__main__":
+        main()
+
 
 # File EncryptDecrypt Page
 if selected=="File EncryptDecrypt":
@@ -414,31 +519,31 @@ if selected=="File EncryptDecrypt":
         """, 
         unsafe_allow_html=True
     )
+    with st.container(border=True):
+        action = st.selectbox("Select Action", ["Encrypt", "Decrypt"])
 
-    action = st.selectbox("Select Action", ["Encrypt", "Decrypt"])
+        generated_key = None
 
-    generated_key = None
+        if action == "Encrypt":
+            generated_key = generate_key()
+        else:
+            user_key = st.text_input("Enter Key")
 
-    if action == "Encrypt":
-        generated_key = generate_key()
-    else:
-        user_key = st.text_input("Enter Key")
+        file = st.file_uploader("Upload a file")
 
-    file = st.file_uploader("Upload a file")
-
-    if st.button("Encrypt/Decrypt"):
-        if file is not None and (action == "Encrypt" or (action == "Decrypt" and user_key)):
-            if action == "Encrypt":
-                original_extension = os.path.splitext(file.name)[1]  # Get the original file extension
-                encrypted_data, original_extension = encrypt_file(file, generated_key, original_extension)
-                with io.BytesIO(encrypted_data) as encrypted_file:
-                    st.download_button(label="Download Encrypted File", data=encrypted_file, file_name="encrypted_file" + original_extension, mime="application/octet-stream")
-                st.info("File encrypted successfully! This is the encryption key: {}".format(generated_key.decode()))
-            elif action == "Decrypt":
-                original_extension = os.path.splitext(file.name)[1]  # Get the original file extension
-                decrypted_data, original_extension = decrypt_file(file, user_key, original_extension)
-                with io.BytesIO(decrypted_data) as decrypted_file:
-                    st.download_button(label="Download Decrypted File", data=decrypted_file, file_name="decrypted_file" + original_extension, mime="application/octet-stream")
+        if st.button("Encrypt/Decrypt"):
+            if file is not None and (action == "Encrypt" or (action == "Decrypt" and user_key)):
+                if action == "Encrypt":
+                    original_extension = os.path.splitext(file.name)[1]  # Get the original file extension
+                    encrypted_data, original_extension = encrypt_file(file, generated_key, original_extension)
+                    with io.BytesIO(encrypted_data) as encrypted_file:
+                        st.download_button(label="Download Encrypted File", data=encrypted_file, file_name="encrypted_file" + original_extension, mime="application/octet-stream")
+                    st.info("File encrypted successfully! This is the encryption key: {}".format(generated_key.decode()))
+                elif action == "Decrypt":
+                    original_extension = os.path.splitext(file.name)[1]  # Get the original file extension
+                    decrypted_data, original_extension = decrypt_file(file, user_key, original_extension)
+                    with io.BytesIO(decrypted_data) as decrypted_file:
+                        st.download_button(label="Download Decrypted File", data=decrypted_file, file_name="decrypted_file" + original_extension, mime="application/octet-stream")
 
 
 # RSA PAGE
